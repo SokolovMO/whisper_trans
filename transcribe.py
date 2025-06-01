@@ -1,3 +1,9 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["openai-whisper>=20240930"]
+# ///
+
 import whisper
 from pathlib import Path
 from datetime import datetime
