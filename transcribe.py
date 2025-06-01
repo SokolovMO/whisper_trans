@@ -33,12 +33,10 @@ def transcribe_audio(file_path: Path, model_name="base"):
         result = model.transcribe(str(file_path))
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_dir = Path("results_transcribe")
+        output_dir = file_path.parent / "results_transcribe"
         output_dir.mkdir(exist_ok=True)
         output_plain = output_dir / f"{file_path.stem}_{timestamp}_transcription.txt"
         output_timed = output_dir / f"{file_path.stem}_{timestamp}_with_timestamps.txt"
-        # output_plain = file_path.with_name(f"{file_path.stem}_{timestamp}_transcription.txt")
-        output_timed = file_path.with_name(f"{file_path.stem}_{timestamp}_with_timestamps.txt")
 
         with open(output_plain, "w", encoding="utf-8") as f:
             f.write(result["text"])
