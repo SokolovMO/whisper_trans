@@ -9,6 +9,7 @@ from pathlib import Path
 from datetime import datetime
 import sys
 
+
 def select_model_interactively():
     models = ["tiny", "base", "small", "medium", "large"]
     print("📦 выбери модель Whisper:\n")
@@ -22,8 +23,11 @@ def select_model_interactively():
             print("⚠️ неверный выбор, используется модель по умолчанию: base")
             return "base"
     except Exception as e:
-        print(f"⚠️ не удалось прочитать выбор, используется модель по умолчанию: base. {e}")
+        print(
+            f"⚠️ не удалось прочитать выбор, используется модель по умолчанию: base. {e}"
+        )
         return "base"
+
 
 def transcribe_audio(file_path: Path, model_name="base"):
     print(f"\n📂 выбранный файл: {file_path}")
@@ -49,12 +53,17 @@ def transcribe_audio(file_path: Path, model_name="base"):
 
         with open(output_timed, "w", encoding="utf-8") as f:
             for segment in result.get("segments", []):
-                f.write(f"[{segment['start']:.2f} - {segment['end']:.2f}] {segment['text']}\n")
+                f.write(
+                    f"[{segment['start']:.2f} - {segment['end']:.2f}] {segment['text']}\n"
+                )
 
-        print(f"✅ транскрибация завершена.\n📝 сохранено:\n- {output_plain.name}\n- {output_timed.name}")
+        print(
+            f"✅ транскрибация завершена.\n📝 сохранено:\n- {output_plain.name}\n- {output_timed.name}"
+        )
 
     except Exception as e:
         print(f"❌ ошибка: {e}")
+
 
 def main():
     args = sys.argv[1:]
@@ -71,6 +80,7 @@ def main():
         model_name = select_model_interactively()
 
     transcribe_audio(file_path, model_name=model_name)
+
 
 if __name__ == "__main__":
     main()
