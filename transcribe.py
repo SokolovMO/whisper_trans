@@ -21,8 +21,8 @@ def select_model_interactively():
         else:
             print("⚠️ неверный выбор, используется модель по умолчанию: base")
             return "base"
-    except:
-        print("⚠️ не удалось прочитать выбор, используется модель по умолчанию: base")
+    except Exception as e:
+        print(f"⚠️ не удалось прочитать выбор, используется модель по умолчанию: base. {e}")
         return "base"
 
 def transcribe_audio(file_path: Path, model_name="base"):
