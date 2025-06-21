@@ -4,9 +4,26 @@ version = "0.1.0"
 description = "CLI-утилита на базе OpenAI Whisper для транскрибации аудио в текст"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["openai-whisper>=20240930"]
-
-[dependency-groups]
-dev = [
-    "ruff>=0.11.12",
+dependencies = [
+  "torch>=2.6.0",
+  "torchvision>=0.21.0",
+  "openai-whisper>=20240930",
 ]
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu124", marker = "sys_platform == 'win32'" },
+]
+torchvision = [
+  { index = "pytorch-cu124", marker = "sys_platform == 'win32'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true

@@ -1,7 +1,26 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["openai-whisper>=20240930"]
+# dependencies = [
+#   "torch>=2.6.0",
+#   "torchvision>=0.21.0",
+#   "openai-whisper>=20240930",
+# ]
+# [tool.uv.sources]
+# torch = [
+#   { index = "pytorch-cu124", marker = "sys_platform == 'win32'" },
+# ]
+# torchvision = [
+#   { index = "pytorch-cu124", marker = "sys_platform == 'win32'" },
+# ]
+# [[tool.uv.index]]
+# name = "pytorch-cpu"
+# url = "https://download.pytorch.org/whl/cpu"
+# explicit = true
+# [[tool.uv.index]]
+# name = "pytorch-cu124"
+# url = "https://download.pytorch.org/whl/cu124"
+# explicit = true
 # ///
 
 import whisper
@@ -16,7 +35,7 @@ def select_model_interactively():
     for i, name in enumerate(models, start=1):
         print(f"{i}. {name}")
     try:
-        choice = int(input("\nВведите номер модели (1-5): "))
+        choice = int(input("\n Введите номер модели (1-5): "))
         if 1 <= choice <= 5:
             return models[choice - 1]
         else:
@@ -51,11 +70,20 @@ def transcribe_audio(file_path: Path, model_name="base"):
         with open(output_plain, "w", encoding="utf-8") as f:
             f.write(result["text"])
 
+        def format_timestamp(seconds: float) -> str:
+            total_seconds = int(seconds)
+            hours = total_seconds // 3600
+            mins = (total_seconds % 3600) // 60
+            secs = total_seconds % 60
+            return f"{hours:02}:{mins:02}:{secs:02}"
+
+
         with open(output_timed, "w", encoding="utf-8") as f:
             for segment in result.get("segments", []):
-                f.write(
-                    f"[{segment['start']:.2f} - {segment['end']:.2f}] {segment['text']}\n"
-                )
+                start = format_timestamp(segment['start'])
+                end = format_timestamp(segment['end'])
+                f.write(f"[{start} - {end}] {segment['text']}\n")
+
 
         print(
             f"✅ транскрибация завершена.\n📝 сохранено:\n- {output_plain.name}\n- {output_timed.name}"
